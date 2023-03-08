@@ -1,0 +1,59 @@
+@page
+@model ASP_RAZORWEB.Pages_Blog.IndexModel
+
+@{
+    ViewData["Title"] = "Cac Bai Viet";
+    int i = 0;
+}
+
+
+<form method="get" asp-page="./Index">
+    <label>Tìm kiếm</label>
+    <input name="SearchString" value=""/>
+    <button type="submit">Tìm</button>
+</form>
+<h1>Danh sach bai viet</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Tao bai viet moi</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Created)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Article) {
+        <tr>
+            <td>@(++i)</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@{
+    var pagingModel = new ASP_RAZORWEB.Helper.PagingModels(){
+        currentpage = @Model.currentpage,
+        countpages = @Model.countpages,
+        generateUrl = (int? p) => Url.Page("/Blog/Index", new {p = p})
+    };
+}
+<partial name="_Paging" model="@pagingModel"/>
